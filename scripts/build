@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p ./build
+cd build
+cmake ..
+if [ ! -e ../.qemu.built ]; then
+    make qemu
+    touch ../.qemu.built
+fi
+make
+

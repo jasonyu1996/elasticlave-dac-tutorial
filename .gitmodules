@@ -1,0 +1,3 @@
+[submodule "elasticlave"]
+	path = elasticlave
+	url = https://github.com/jasonyu1996/elasticlave.git

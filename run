@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TUTNAME="$1"
+
+CURDIR="$(readlink -f $(dirname $0))"
+
+if [ -z "$TUTNAME" ]; then
+    "${CURDIR}"/scripts/docker-run make -C build run
+else
+    "${CURDIR}"/scripts/docker-run make -C build run-$TUTNAME
+fi
+
+

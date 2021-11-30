@@ -1,0 +1,23 @@
+#!/usr/bin/expect -f
+
+# no timeout
+set timeout -1
+set qemu [lindex $argv 0];
+set bios [lindex $argv 1];
+set kernel [lindex $argv 2];
+set storage [lindex $argv 3];
+set command [lindex $argv 4];
+
+spawn $qemu -m 2G -nographic -machine virt -bios $bios -kernel $kernel -append "console=ttyS0 ro root=/dev/vda" -drive file=$storage,format=raw,id=hd0 -device virtio-blk-device,drive=hd0 -smp 4 -netdev user,id=net0,net=192.168.100.1/24,dhcpstart=192.168.100.128 -device virtio-net-device,netdev=net0
+
+expect "buildroot login" { send "root\r" }
+expect "*?assword" { send "sifive\r" }
+
+log_file -noappend  output.log
+
+expect "# " { send "insmod keystone-driver.ko\r" }
+expect "# " { send "$command\r" }
+expect "# " { send "\01"; send "x" }
+
+expect eof
+
